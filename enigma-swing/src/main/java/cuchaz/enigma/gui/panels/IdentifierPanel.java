@@ -136,7 +136,7 @@ public class IdentifierPanel {
 				@Override
 				public boolean tryStopEditing(ConvertingTextField field, boolean abort) {
 					if (abort) return true;
-					vc.reset();
+					vc.reset(); // TODO test what happens if this is disabled
 					vc.setActiveElement(field);
 					validateRename(field.getText());
 					return vc.canProceed();
@@ -145,14 +145,14 @@ public class IdentifierPanel {
 				@Override
 				public void onStopEditing(ConvertingTextField field, boolean abort) {
 					if (!abort) {
-						vc.reset();
+						vc.reset(); // TODO test what happens if this is disabled
 						vc.setActiveElement(field);
 						doRename(field.getText());
 					}
 
 					EditorPanel e = gui.getActiveEditor();
-					if (e != null) {
-						e.getEditor().requestFocusInWindow();
+					if (e != null /*&& gui.getController().getServer() == null*/) {
+						e.getEditor().requestFocusInWindow(); // TODO test what happens if this is disabled
 					}
 				}
 			});
