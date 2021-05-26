@@ -2,13 +2,16 @@ package cuchaz.enigma.gui.elements;
 
 import cuchaz.enigma.gui.ClassSelector;
 import cuchaz.enigma.gui.Gui;
+import cuchaz.enigma.gui.util.Keybindable;
 import cuchaz.enigma.utils.I18n;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
-import java.awt.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class DeobfPanelPopupMenu {
+public class DeobfPanelPopupMenu implements Keybindable {
 
     private final JPopupMenu ui;
     private final JMenuItem renamePackage;
@@ -40,6 +43,7 @@ public class DeobfPanelPopupMenu {
         this.ui.add(this.renameClass);
 
         this.retranslateUi();
+        this.setupKeyStrokes();
     }
 
     public void show(ClassSelector deobfClasses, int x, int y) {
@@ -52,5 +56,13 @@ public class DeobfPanelPopupMenu {
     public void retranslateUi() {
         this.renamePackage.setText(I18n.translate("popup_menu.deobf_panel.rename_package"));
         this.renameClass.setText(I18n.translate("popup_menu.deobf_panel.rename_class"));
+    }
+
+    @Override
+    public Map<JMenuItem, String> getKeybindableItems() {
+        Map<JMenuItem, String> map = new LinkedHashMap<>();
+        map.put(this.renamePackage, "deobf_panel.rename_package");
+        map.put(this.renameClass, "deobf_panel.rename_class");
+        return map;
     }
 }

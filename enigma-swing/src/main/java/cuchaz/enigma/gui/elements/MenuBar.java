@@ -1,16 +1,12 @@
 package cuchaz.enigma.gui.elements;
 
 import java.awt.FileDialog;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -24,13 +20,14 @@ import cuchaz.enigma.gui.config.NetConfig;
 import cuchaz.enigma.gui.config.UiConfig;
 import cuchaz.enigma.gui.dialog.*;
 import cuchaz.enigma.gui.util.GuiUtil;
+import cuchaz.enigma.gui.util.Keybindable;
 import cuchaz.enigma.gui.util.LanguageUtil;
 import cuchaz.enigma.gui.util.ScaleUtil;
 import cuchaz.enigma.translation.mapping.serde.MappingFormat;
 import cuchaz.enigma.utils.I18n;
 import cuchaz.enigma.utils.Pair;
 
-public class MenuBar {
+public class MenuBar implements Keybindable {
 
 	private final JMenuBar ui = new JMenuBar();
 
@@ -55,13 +52,14 @@ public class MenuBar {
 	private final JMenu themesMenu = new JMenu();
 	private final JMenu languagesMenu = new JMenu();
 	private final JMenu scaleMenu = new JMenu();
+	private final JMenuItem keybindingItem = new JMenuItem();
 	private final JMenuItem fontItem = new JMenuItem();
 	private final JMenuItem customScaleItem = new JMenuItem();
 
 	private final JMenu searchMenu = new JMenu();
-	private final JMenuItem searchClassItem = new JMenuItem();
-	private final JMenuItem searchMethodItem = new JMenuItem();
-	private final JMenuItem searchFieldItem = new JMenuItem();
+	private final JMenuItem searchClassItem = new JMenuItem(GuiUtil.CLASS_ICON);
+	private final JMenuItem searchMethodItem = new JMenuItem(GuiUtil.METHOD_ICON);
+	private final JMenuItem searchFieldItem = new JMenuItem(GuiUtil.FIELD_ICON);
 
 	private final JMenu collabMenu = new JMenu();
 	private final JMenuItem connectItem = new JMenuItem();
@@ -77,6 +75,7 @@ public class MenuBar {
 		this.gui = gui;
 
 		this.retranslateUi();
+		this.setupKeyStrokes();
 
 		prepareOpenMenu(this.openMenu, gui);
 		prepareSaveMappingsAsMenu(this.saveMappingsAsMenu, this.saveMappingsItem, gui);
@@ -111,6 +110,7 @@ public class MenuBar {
 		this.viewMenu.add(this.languagesMenu);
 		this.scaleMenu.add(this.customScaleItem);
 		this.viewMenu.add(this.scaleMenu);
+		this.viewMenu.add(this.keybindingItem);
 		this.viewMenu.add(this.fontItem);
 		this.ui.add(this.viewMenu);
 
@@ -127,9 +127,6 @@ public class MenuBar {
 		this.helpMenu.add(this.githubItem);
 		this.ui.add(this.helpMenu);
 
-		this.saveMappingsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
-		this.searchClassItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.SHIFT_DOWN_MASK));
-
 		this.jarOpenItem.addActionListener(_e -> this.onOpenJarClicked());
 		this.jarCloseItem.addActionListener(_e -> this.gui.getController().closeJar());
 		this.saveMappingsItem.addActionListener(_e -> this.onSaveMappingsClicked());
@@ -142,6 +139,7 @@ public class MenuBar {
 		this.statsItem.addActionListener(_e -> StatsDialog.show(this.gui));
 		this.exitItem.addActionListener(_e -> this.gui.close());
 		this.customScaleItem.addActionListener(_e -> this.onCustomScaleClicked());
+		this.keybindingItem.addActionListener(_e -> this.onKeybindingClicked(this.gui));
 		this.fontItem.addActionListener(_e -> this.onFontClicked(this.gui));
 		this.searchClassItem.addActionListener(_e -> this.onSearchClicked(SearchDialog.Type.CLASS));
 		this.searchMethodItem.addActionListener(_e -> this.onSearchClicked(SearchDialog.Type.METHOD));
@@ -195,6 +193,7 @@ public class MenuBar {
 		this.themesMenu.setText(I18n.translate("menu.view.themes"));
 		this.languagesMenu.setText(I18n.translate("menu.view.languages"));
 		this.scaleMenu.setText(I18n.translate("menu.view.scale"));
+		this.keybindingItem.setText(I18n.translate("menu.view.keybinding"));
 		this.fontItem.setText(I18n.translate("menu.view.font"));
 		this.customScaleItem.setText(I18n.translate("menu.view.scale.custom"));
 
@@ -210,6 +209,32 @@ public class MenuBar {
 		this.helpMenu.setText(I18n.translate("menu.help"));
 		this.aboutItem.setText(I18n.translate("menu.help.about"));
 		this.githubItem.setText(I18n.translate("menu.help.github"));
+	}
+
+	@Override
+	public Map<JMenuItem, String> getKeybindableItems() {
+		Map<JMenuItem, String> map = new LinkedHashMap<>();
+		map.put(this.jarOpenItem, "file.open_jar");
+		map.put(this.jarCloseItem, "file.close_jar");
+		map.put(this.saveMappingsItem, "file.save_mappings");
+		map.put(this.closeMappingsItem, "file.close_mappings");
+		map.put(this.dropMappingsItem, "file.drop_mappings");
+		map.put(this.reloadMappingsItem, "file.reload_mappings");
+		map.put(this.reloadAllItem, "file.reload_all");
+		map.put(this.exportSourceItem, "file.export_source");
+		map.put(this.exportJarItem, "file.export_jar");
+		map.put(this.statsItem, "file.stats");
+		map.put(this.exitItem, "file.exit");
+		map.put(this.keybindingItem, "view.keybinding");
+		map.put(this.fontItem, "view.font");
+		map.put(this.searchClassItem, "search.class");
+		map.put(this.searchMethodItem, "search.method");
+		map.put(this.searchFieldItem, "search.field");
+		map.put(this.connectItem, "collab.connect");
+		map.put(this.startServerItem, "collab.start_server");
+		map.put(this.aboutItem, "help.about");
+		map.put(this.githubItem, "help.github");
+		return map;
 	}
 
 	public JMenuBar getUi() {
@@ -292,6 +317,10 @@ public class MenuBar {
 		}
 		ScaleUtil.setScaleFactor(newScale);
 		ChangeDialog.show(this.gui.getFrame());
+	}
+
+	private void onKeybindingClicked(Gui gui) {
+		KeybindingDialog.show(gui);
 	}
 
 	private void onFontClicked(Gui gui) {

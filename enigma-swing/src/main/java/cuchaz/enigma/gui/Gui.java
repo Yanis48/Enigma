@@ -884,6 +884,14 @@ public class Gui implements LanguageChangeListener {
 		return menuBar;
 	}
 
+	public EditorTabPopupMenu getEditorTabPopupMenu() {
+		return this.editorTabPopupMenu;
+	}
+
+	public DeobfPanelPopupMenu getDeobfPanelPopupMenu() {
+		return this.deobfPanelPopupMenu;
+	}
+
 	public void addMessage(Message message) {
 		JScrollBar verticalScrollBar = messageScrollPane.getVerticalScrollBar();
 		boolean isAtBottom = verticalScrollBar.getValue() >= verticalScrollBar.getMaximum() - verticalScrollBar.getModel().getExtent();
@@ -951,6 +959,13 @@ public class Gui implements LanguageChangeListener {
 		this.structurePanel.retranslateUi();
 		this.editorTabPopupMenu.retranslateUi();
 		this.editors.values().forEach(EditorPanel::retranslateUi);
+	}
+
+	public void updateKeyStrokes() {
+		this.menuBar.setupKeyStrokes();
+		this.deobfPanelPopupMenu.setupKeyStrokes();
+		this.editorTabPopupMenu.setupKeyStrokes();
+		this.editors.values().forEach(EditorPanel::setupKeyStrokes);
 	}
 
 	public void setConnectionState(ConnectionState state) {

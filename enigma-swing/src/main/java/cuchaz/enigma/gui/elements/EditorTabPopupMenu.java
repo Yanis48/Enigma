@@ -1,17 +1,19 @@
 package cuchaz.enigma.gui.elements;
 
 import java.awt.Component;
-import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 
 import cuchaz.enigma.gui.Gui;
 import cuchaz.enigma.gui.panels.EditorPanel;
+import cuchaz.enigma.gui.util.Keybindable;
 import cuchaz.enigma.utils.I18n;
 
-public class EditorTabPopupMenu {
+public class EditorTabPopupMenu implements Keybindable {
 
 	private final JPopupMenu ui;
 	private final JMenuItem close;
@@ -29,7 +31,6 @@ public class EditorTabPopupMenu {
 		this.ui = new JPopupMenu();
 
 		this.close = new JMenuItem();
-		this.close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, KeyEvent.CTRL_DOWN_MASK));
 		this.close.addActionListener(a -> gui.closeEditor(editor));
 		this.ui.add(this.close);
 
@@ -50,6 +51,7 @@ public class EditorTabPopupMenu {
 		this.ui.add(this.closeRight);
 
 		this.retranslateUi();
+		this.setupKeyStrokes();
 	}
 
 	public void show(Component invoker, int x, int y, EditorPanel editorPanel) {
@@ -63,5 +65,16 @@ public class EditorTabPopupMenu {
 		this.closeOthers.setText(I18n.translate("popup_menu.editor_tab.close_others"));
 		this.closeLeft.setText(I18n.translate("popup_menu.editor_tab.close_left"));
 		this.closeRight.setText(I18n.translate("popup_menu.editor_tab.close_right"));
+	}
+
+	@Override
+	public Map<JMenuItem, String> getKeybindableItems() {
+		Map<JMenuItem, String> map = new LinkedHashMap<>();
+		map.put(this.close, "editor_tab.close");
+		map.put(this.closeAll, "editor_tab.close_all");
+		map.put(this.closeOthers, "editor_tab.close_others");
+		map.put(this.closeLeft, "editor_tab.close_left");
+		map.put(this.closeRight, "editor_tab.close_right");
+		return map;
 	}
 }

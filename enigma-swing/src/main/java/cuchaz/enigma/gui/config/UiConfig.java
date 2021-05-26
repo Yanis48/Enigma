@@ -204,6 +204,14 @@ public final class UiConfig {
 		return getThemeColorRgb("Line Numbers Selected");
 	}
 
+	public static String getKeybinding(String name) {
+		return swing.data().section("Keybindings").setIfAbsentString(name, getDefaultKeybinding(name));
+	}
+
+	public static void setKeybinding(String name, String value) {
+		swing.data().section("Keybindings").setString(name, value);
+	}
+
 	public static boolean useCustomFonts() {
 		return swing.data().section("Themes").section(getActiveLookAndFeel().name()).section("Fonts").setIfAbsentBool("Use Custom", false);
 	}
@@ -413,4 +421,24 @@ public final class UiConfig {
 		}
 	}
 
+	public static String getDefaultKeybinding(String name) {
+		return switch (name) {
+			case "file.save_mappings" -> "ctrl S";
+			case "search.class" -> "shift SPACE";
+			case "editor_tab.close" -> "ctrl 4";
+			case "editor.rename" -> "ctrl R";
+			case "editor.edit_javadoc" -> "ctrl D";
+			case "editor.show_inheritance" -> "ctrl I";
+			case "editor.show_implementations" -> "ctrl M";
+			case "editor.show_calls" -> "ctrl C";
+			case "editor.show_calls.specific" -> "ctrl shift C";
+			case "editor.open_declaration" -> "ctrl N";
+			case "editor.open_back" -> "ctrl P";
+			case "editor.open_forward" -> "ctrl E";
+			case "editor.toggle_obfuscation" -> "ctrl O";
+			case "editor.zoom_in" -> "ctrl PLUS";
+			case "editor.zoom_out" -> "ctrl MINUS";
+			default -> "";
+		};
+	}
 }

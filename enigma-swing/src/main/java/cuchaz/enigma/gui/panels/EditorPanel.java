@@ -605,6 +605,14 @@ public class EditorPanel {
 		this.popupMenu.retranslateUi();
 	}
 
+	public Map<JMenuItem, String> getKeybindableItems() {
+		return this.popupMenu.getKeybindableItems();
+	}
+
+	public void setupKeyStrokes() {
+		this.popupMenu.setupKeyStrokes();
+	}
+
 	private enum DisplayMode {
 		INACTIVE,
 		IN_PROGRESS,

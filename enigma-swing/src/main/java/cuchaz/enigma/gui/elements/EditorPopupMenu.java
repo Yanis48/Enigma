@@ -1,23 +1,25 @@
 package cuchaz.enigma.gui.elements;
 
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 
 import cuchaz.enigma.analysis.EntryReference;
 import cuchaz.enigma.gui.Gui;
 import cuchaz.enigma.gui.GuiController;
 import cuchaz.enigma.gui.panels.EditorPanel;
+import cuchaz.enigma.gui.util.Keybindable;
 import cuchaz.enigma.translation.representation.entry.ClassEntry;
 import cuchaz.enigma.translation.representation.entry.Entry;
 import cuchaz.enigma.translation.representation.entry.FieldEntry;
 import cuchaz.enigma.translation.representation.entry.MethodEntry;
 import cuchaz.enigma.utils.I18n;
 
-public class EditorPopupMenu {
+public class EditorPopupMenu implements Keybindable {
 
 	private final JPopupMenu ui = new JPopupMenu();
 
@@ -43,6 +45,7 @@ public class EditorPopupMenu {
 		this.gui = gui;
 
 		this.retranslateUi();
+		this.setupKeyStrokes();
 
 		this.ui.add(this.renameItem);
 		this.ui.add(this.editJavadocItem);
@@ -69,19 +72,6 @@ public class EditorPopupMenu {
 		this.openPreviousItem.setEnabled(false);
 		this.openNextItem.setEnabled(false);
 		this.toggleMappingItem.setEnabled(false);
-
-		this.renameItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
-		this.editJavadocItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
-		this.showInheritanceItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK));
-		this.showImplementationsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK));
-		this.showCallsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
-		this.showCallsSpecificItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK));
-		this.openEntryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
-		this.openPreviousItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
-		this.openNextItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
-		this.toggleMappingItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
-		this.zoomInItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_DOWN_MASK));
-		this.zoomOutMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK));
 
 		this.renameItem.addActionListener(event -> gui.startRename(editor));
 		this.editJavadocItem.addActionListener(event -> gui.startDocChange(editor));
@@ -183,6 +173,25 @@ public class EditorPopupMenu {
 		this.zoomInItem.setText(I18n.translate("popup_menu.zoom.in"));
 		this.zoomOutMenu.setText(I18n.translate("popup_menu.zoom.out"));
 		this.resetZoomItem.setText(I18n.translate("popup_menu.zoom.reset"));
+	}
+
+	@Override
+	public Map<JMenuItem, String> getKeybindableItems() {
+		Map<JMenuItem, String> map = new LinkedHashMap<>();
+		map.put(this.renameItem, "editor.rename");
+		map.put(this.editJavadocItem, "editor.edit_javadoc");
+		map.put(this.showInheritanceItem, "editor.show_inheritance");
+		map.put(this.showImplementationsItem, "editor.show_implementations");
+		map.put(this.showCallsItem, "editor.show_calls");
+		map.put(this.showCallsSpecificItem, "editor.show_calls.specific");
+		map.put(this.openEntryItem, "editor.open_declaration");
+		map.put(this.openPreviousItem, "editor.open_back");
+		map.put(this.openNextItem, "editor.open_forward");
+		map.put(this.toggleMappingItem, "editor.toggle_obfuscation");
+		map.put(this.zoomInItem, "editor.zoom_in");
+		map.put(this.zoomOutMenu, "editor.zoom_out");
+		map.put(this.resetZoomItem, "editor.reset_zoom");
+		return map;
 	}
 
 	public JPopupMenu getUi() {

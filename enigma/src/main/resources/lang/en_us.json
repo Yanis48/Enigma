@@ -43,6 +43,10 @@
 	"menu.view.scale": "Scale",
 	"menu.view.scale.custom": "Custom...",
 	"menu.view.scale.custom.title": "Custom Scale",
+	"menu.view.keybinding": "Keybindings...",
+	"menu.view.keybinding.title": "Keybindings",
+	"menu.view.keybinding.reset": "Reset",
+	"menu.view.keybinding.reset.all": "Reset all",
 	"menu.view.font": "Fonts...",
 	"menu.view.change.title": "Changes",
 	"menu.view.change.summary": "Changes will be applied after the next restart.",
@@ -198,6 +202,7 @@
 	"validation.message.illegal_doc_comment_end": "Javadoc comment cannot contain the character sequence '*/'.",
 	"validation.message.reserved_identifier": "'%s' is a reserved identifier.",
 	"validation.message.unknown_record_getter": "Could not find a matching record component getter for %s",
+	"validation.message.nonunique_keybinding": "'%s' keybinding is not unique.",
 
 	"crash.title": "%s - Crash Report",
 	"crash.summary": "%s has crashed! =(",
